@@ -139,3 +139,5 @@ typings/
 .caches
 
 bin
+
+**/*.log
