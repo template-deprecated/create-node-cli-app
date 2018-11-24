@@ -52,36 +52,23 @@
     "compile:prod": "webpack --mode=production",
     "compile:watch": "webpack --watch",
     "start": "node .caches/cli-template.js",
-    "clean": "rimraf bin .caches",
+    "clean": "rimraf bin .caches *.log log",
+    "clean:all": "rimraf bin .caches *.log log node_modules yarn.lock",
     "build": "yarn compile:prod && pkg --out-path bin .",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
   "pkg": {
-    "assets": [
-      "package.json"
-    ]
+    "assets": ["package.json"]
   },
   "jest": {
     "setupTestFrameworkScriptFile": "./test/jest.setup.js",
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "testMatch": [
-      "**/src/**/__tests__/**/*.ts?(x)",
-      "**/src/**/?(*.)+(spec|test).ts?(x)"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.ts"
-    ],
-    "coverageReporters": [
-      "json",
-      "lcov",
-      "text-summary"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "ts"
-    ],
+    "testMatch": ["**/src/**/__tests__/**/*.ts?(x)", "**/src/**/?(*.)+(spec|test).ts?(x)"],
+    "collectCoverageFrom": ["src/**/*.ts"],
+    "coverageReporters": ["json", "lcov", "text-summary"],
+    "moduleFileExtensions": ["js", "ts"],
     "transform": {
       "^.+\\.js$": "babel-jest"
     },

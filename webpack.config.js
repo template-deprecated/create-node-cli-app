@@ -85,14 +85,14 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       COMPILED_DATE: JSON.stringify(+new Date())
-    }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: "static",
-      reportFilename: "webpack/report.html",
-      generateStatsFile: true,
-      statsFilename: "webpack/stat.json",
-      openAnalyzer: false
     })
+    // new BundleAnalyzerPlugin({
+    //   analyzerMode: "static",
+    //   reportFilename: "webpack/report.html",
+    //   generateStatsFile: true,
+    //   statsFilename: "webpack/stat.json",
+    //   openAnalyzer: false
+    // })
   ],
   output: {
     path: path.join(__dirname, ".caches"),
