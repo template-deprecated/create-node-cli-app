@@ -1,11 +1,18 @@
 {
   "name": "create-node-cli-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Create node cli app",
   "main": "index.js",
+  "bin": {
+    "create-node-cli-app": "index.js"
+  },
   "repository": "https://github.com/Template-generator/create-node-cli-app.git",
   "author": "Kamontat Chantrachirathumrong <kamontat.c@hotmail.com>",
   "license": "MIT",
+  "private": false,
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "dependencies": {
     "fs-extra": "7.0.1",
     "listr": "0.14.3",
@@ -13,5 +20,9 @@
     "pkg": "4.3.4",
     "prompts": "1.2.1",
     "yargs": "12.0.5"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "build": "pkg . -t node10-macos,node10-linux,node10-win --output bin/create-node-cli-app"
   }
 }
