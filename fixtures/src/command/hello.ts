@@ -8,8 +8,7 @@ export default {
   description: "Show hello to person name",
   option: { world: { alias: "w", desc: "Hello to all people in the world", type: "boolean" } },
   action: (log: Logger, argv: Arguments) => {
-    log.log(`Hello world with ${argv.world}`);
-    log.log(`args: ${argv.asdf}`);
+    log.log(`Hello to ${argv.name} with (world=${argv.world})`);
   },
   help: {
     example: {

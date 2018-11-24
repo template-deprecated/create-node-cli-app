@@ -9,8 +9,18 @@ const Mustache = require("mustache");
 const Listr = require("listr");
 const prompts = require("prompts");
 
+const app = {
+  name: "create-node-cli-app",
+  version: "1.1.0",
+  repo_url: "https://github.com/Template-generator/create-node-cli-app",
+  developer: "Kamontat Chantrachirathumrong <kamontat_c@hotmail.com>",
+  when: +new Date()
+};
+
 const argv = yargs
-  .version("1.0.0")
+  .scriptName(app.name)
+  .version(app.version)
+  .epilog(`Copyright 2018 by ${app.developer} (${app.repo_url})`)
   .strict()
   .command("$0 <app-name...>", "Create node cli app with typescript", yargs => {
     return yargs
@@ -29,6 +39,78 @@ const filename = name.replace(" ", argv.spaceReplace).toLowerCase();
 const filepath = argv.current ? rootpath : path.join(rootpath, filename);
 
 (async () => {
+  const response = await prompts(
+    [
+      {
+        type: "text",
+        name: "name",
+        message: "Application name",
+        initial: filename
+      },
+      {
+        type: "text",
+        name: "version",
+        message: "Application version",
+        initial: "1.0.0"
+      },
+      {
+        type: "text",
+        name: "description",
+        message: "Application description"
+      },
+      {
+        type: "text",
+        name: "filename",
+        message: "Application file name",
+        initial: filename
+      },
+      {
+        type: "text",
+        name: "repository_url",
+        message: "Repository url",
+        initial: ""
+      },
+      {
+        type: "text",
+        name: "author_name",
+        message: "Author name"
+      },
+      {
+        type: "text",
+        name: "author_surname",
+        message: "Author surname"
+      },
+      {
+        type: "text",
+        name: "author_email",
+        message: "Author email"
+      },
+      {
+        type: "toggle",
+        name: "git",
+        message: "Do you want git init?",
+        initial: true,
+        active: "yes",
+        inactive: "no"
+      },
+      {
+        type: "toggle",
+        name: "yarn",
+        message: "Do you want run yarn install?",
+        initial: true,
+        active: "yes",
+        inactive: "no"
+      }
+    ],
+    {
+      onCancel: () => {
+        console.log("You cancel prompt commands");
+
+        process.exit(1);
+      }
+    }
+  );
+
   const progress = new Listr();
 
   progress.add({
@@ -64,70 +146,33 @@ const filepath = argv.current ? rootpath : path.join(rootpath, filename);
     }
   });
 
-  const context = await progress.run();
-
-  const response = await prompts([
-    {
-      type: "text",
-      name: "name",
-      message: "Application name",
-      initial: filename
-    },
-    {
-      type: "text",
-      name: "version",
-      message: "Application version",
-      initial: "1.0.0"
-    },
-    {
-      type: "text",
-      name: "description",
-      message: "Application description"
-    },
-    {
-      type: "text",
-      name: "filename",
-      message: "Application file name",
-      initial: filename
-    },
-    {
-      type: "text",
-      name: "repository_url",
-      message: "Repository url",
-      initial: ""
-    },
-    {
-      type: "text",
-      name: "author_name",
-      message: "Author name"
-    },
-    {
-      type: "text",
-      name: "author_surname",
-      message: "Author surname"
-    },
-    {
-      type: "text",
-      name: "author_email",
-      message: "Author email"
-    },
-    {
-      type: "toggle",
-      name: "git",
-      message: "Do you want git init?",
-      initial: true,
-      active: "yes",
-      inactive: "no"
-    },
-    {
-      type: "toggle",
-      name: "yarn",
-      message: "Do you want run yarn install?",
-      initial: true,
-      active: "yes",
-      inactive: "no"
+  progress.add({
+    title: "Update package.json file",
+    task: ctx => {
+      const finalPjson = Mustache.render(ctx.content.pjson, ctx.data);
+      return fs.outputFile(ctx.path.pjson, finalPjson);
     }
-  ]);
+  });
+
+  progress.add({
+    title: "Update webpack.config.js file",
+    task: ctx => {
+      const finalWebpack = Mustache.render(ctx.content.webpack, ctx.data);
+      return fs.outputFile(ctx.path.webpack, finalWebpack);
+    }
+  });
+
+  progress.add({
+    title: "Install git command to folder",
+    enabled: ctx => ctx.data.git === true,
+    task: () => execa("git", ["init", filepath])
+  });
+
+  progress.add({
+    title: "Install dependencies by yarn",
+    enabled: ctx => ctx.data.yarn === true,
+    task: () => execa("yarn", ["install", "--cwd", filepath])
+  });
 
   const data = {
     name: response.name,
@@ -141,45 +186,11 @@ const filepath = argv.current ? rootpath : path.join(rootpath, filename);
       email: response.author_email
     },
     git: response.git,
-    yarn: response.yarn
+    yarn: response.yarn,
+    app: app
   };
 
-  // const finalPjson = Mustache.render(ctx.content.pjson, ctx.data);
-  // console.log(finalPjson.toString());
-
-  // const finalWebpack = Mustache.render(ctx.content.webpack, ctx.data);
-  // console.log(finalWebpack.toString());
-
-  const progress2 = new Listr();
-
-  progress2.add({
-    title: "Update package.json file",
-    task: ctx => {
-      const finalPjson = Mustache.render(ctx.content.pjson, ctx.data);
-      return fs.outputFile(ctx.path.pjson, finalPjson);
-    }
+  progress.run({
+    data: data
   });
-
-  progress2.add({
-    title: "Update webpack.config.js file",
-    task: ctx => {
-      const finalWebpack = Mustache.render(ctx.content.webpack, ctx.data);
-      return fs.outputFile(ctx.path.webpack, finalWebpack);
-    }
-  });
-
-  progress2.add({
-    title: "Install git command to folder",
-    enabled: ctx => ctx.data.git === true,
-    task: () => execa("git", ["init", filepath])
-  });
-
-  progress2.add({
-    title: "Install dependencies by yarn",
-    enabled: ctx => ctx.data.yarn === true,
-    task: () => execa("yarn", ["install", "--cwd", filepath])
-  });
-
-  context.data = data;
-  progress2.run(context);
 })();

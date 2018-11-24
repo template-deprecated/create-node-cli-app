@@ -8,6 +8,12 @@
   "author": "{{author.name}} {{author.surname}} <{{author.email}}>",
   "license": "MIT",
   "private": false,
+  "generator": {
+    "command": "{{app.name}}",
+    "version": "{{app.version}}",
+    "repo": "{{app.repo_url}}",
+    "date": "{{app.when}}"
+  },
   "dependencies": {
     "bluebird": "3.5.3",
     "chalk": "2.4.1",
