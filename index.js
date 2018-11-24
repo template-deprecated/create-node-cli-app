@@ -19,7 +19,7 @@ const argv = yargs
       .positional("app-name", { desc: "Application name, can be capital, and space name" });
   }).argv;
 
-const fixture = "fixtures";
+const fixture = fs.realpathSync("fixtures");
 
 const name = argv.appName.join(" ");
 const filename = name.replace(" ", argv.spaceReplace).toLowerCase();
