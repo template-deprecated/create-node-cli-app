@@ -3,6 +3,7 @@
 const path = require("path");
 const fs = require("fs-extra");
 const yargs = require("yargs");
+const execa = require("execa");
 
 const Mustache = require("mustache");
 const Listr = require("listr");
@@ -113,6 +114,22 @@ const filepath = argv.current ? "." : path.join(".", filename);
       type: "text",
       name: "deployment_name",
       message: "Deployment file name"
+    },
+    {
+      type: "toggle",
+      name: "git",
+      message: "Do you want git init?",
+      initial: true,
+      active: "yes",
+      inactive: "no"
+    },
+    {
+      type: "toggle",
+      name: "yarn",
+      message: "Do you want run yarn install?",
+      initial: true,
+      active: "yes",
+      inactive: "no"
     }
   ]);
 
@@ -154,6 +171,28 @@ const filepath = argv.current ? "." : path.join(".", filename);
       const finalWebpack = Mustache.render(ctx.content.webpack, ctx.data);
       return fs.outputFile(ctx.path.webpack, finalWebpack);
     }
+  });
+
+  progress2.add({
+    title: "Install git command to folder",
+    enabled: ctx => ctx.data.git === true,
+    task: () =>
+      execa.stdout("git", ["init", filepath]).then(result => {
+        if (result !== "0") {
+          throw new Error("Cannot initial git to " + filepath);
+        }
+      })
+  });
+
+  progress2.add({
+    title: "Install dependencies by yarn",
+    enabled: ctx => ctx.data.yarn === true,
+    task: () =>
+      execa.stdout("yarn", ["install", "--cwd", filepath]).then(result => {
+        if (result !== "0") {
+          throw new Error("Cannot initial git to " + filepath);
+        }
+      })
   });
 
   context.data = data;
