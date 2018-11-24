@@ -58,9 +58,10 @@
     "compile:prod": "webpack --mode=production",
     "compile:watch": "webpack --watch",
     "start": "node .caches/{{filename}}.js",
-    "clean": "rimraf bin .caches *.log log",
-    "clean:all": "rimraf bin .caches *.log log node_modules yarn.lock",
+    "clean": "rimraf bin .caches *.log log docs",
+    "clean:all": "rimraf bin .caches *.log log docs node_modules yarn.lock",
     "build": "yarn compile:prod && pkg --out-path bin .",
+    "docs": "typedoc --out ./docs --target ES3 --module commonjs --name \"{{realname}}\" --mode modules --exclude \"**/_*.ts\"",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
