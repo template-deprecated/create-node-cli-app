@@ -1,6 +1,6 @@
 {
   "name": "create-node-cli-app",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Create node cli app",
   "main": "index.js",
   "bin": {
