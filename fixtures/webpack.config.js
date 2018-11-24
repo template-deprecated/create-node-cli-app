@@ -9,7 +9,7 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 module.exports = {
   mode: "development", // production
   entry: {
-    "cli-template": "./index.ts"
+    "{{deployment.name}}": "./index.ts"
   },
   devtool: "inline-source-map",
   module: {
