@@ -1,6 +1,6 @@
 {
   "name": "create-node-cli-app",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Create node cli app",
   "main": "index.js",
   "bin": {
@@ -23,6 +23,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "build": "pkg . -t node10-macos,node10-linux,node10-win --output bin/create-node-cli-app"
+    "build": "pkg . -t node8-macos,node8-linux,node8-win --output bin/create-node-cli-app",
+    "deploy": "npm publish --access public"
   }
 }
