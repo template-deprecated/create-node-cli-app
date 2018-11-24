@@ -14,18 +14,19 @@ const argv = yargs
   .strict()
   .command("$0 <app-name...>", "Create node cli app with typescript", yargs => {
     return yargs
-      .option("quite", { desc: "Remove all log" })
-      .option("--space-replace", { default: "-" })
+      .option("to-dir", { alias: "P", desc: "Instead of create in current folder, use this." })
+      .option("space-replace", { default: "-" })
       .option("current", { desc: "Create application to current folder" })
       .positional("app-name", { desc: "Application name, can be capital, and space name" });
   }).argv;
 
 const fixture = fs.realpathSync(path.join(__dirname, "fixtures"));
+const rootpath = argv.toDir || ".";
 
 const name = argv.appName.join(" ");
 const filename = name.replace(" ", argv.spaceReplace).toLowerCase();
 
-const filepath = argv.current ? "." : path.join(".", filename);
+const filepath = argv.current ? rootpath : path.join(rootpath, filename);
 
 (async () => {
   const progress = new Listr();
@@ -86,7 +87,7 @@ const filepath = argv.current ? "." : path.join(".", filename);
     {
       type: "text",
       name: "filename",
-      message: "Application caches file name",
+      message: "Application file name",
       initial: filename
     },
     {
@@ -109,11 +110,6 @@ const filepath = argv.current ? "." : path.join(".", filename);
       type: "text",
       name: "author_email",
       message: "Author email"
-    },
-    {
-      type: "text",
-      name: "deployment_name",
-      message: "Deployment file name"
     },
     {
       type: "toggle",
@@ -144,9 +140,8 @@ const filepath = argv.current ? "." : path.join(".", filename);
       surname: response.author_surname,
       email: response.author_email
     },
-    deployment: {
-      name: response.deployment_name
-    }
+    git: response.git,
+    yarn: response.yarn
   };
 
   // const finalPjson = Mustache.render(ctx.content.pjson, ctx.data);
@@ -176,23 +171,13 @@ const filepath = argv.current ? "." : path.join(".", filename);
   progress2.add({
     title: "Install git command to folder",
     enabled: ctx => ctx.data.git === true,
-    task: () =>
-      execa.stdout("git", ["init", filepath]).then(result => {
-        if (result !== "0") {
-          throw new Error("Cannot initial git to " + filepath);
-        }
-      })
+    task: () => execa("git", ["init", filepath])
   });
 
   progress2.add({
     title: "Install dependencies by yarn",
     enabled: ctx => ctx.data.yarn === true,
-    task: () =>
-      execa.stdout("yarn", ["install", "--cwd", filepath]).then(result => {
-        if (result !== "0") {
-          throw new Error("Cannot initial git to " + filepath);
-        }
-      })
+    task: () => execa("yarn", ["install", "--cwd", filepath])
   });
 
   context.data = data;
