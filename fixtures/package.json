@@ -4,7 +4,7 @@
   "description": "{{description}}",
   "main": "index.ts",
   "bin": ".caches/{{filename}}.js",
-  "repository": "{{repository_url}}",
+  "repository": "{{{repository_url}}}",
   "author": "{{author.name}} {{author.surname}} <{{author.email}}>",
   "license": "MIT",
   "private": false,

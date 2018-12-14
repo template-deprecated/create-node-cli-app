@@ -28,10 +28,24 @@ prompts, listr (as progressing), chalk (as colorize),
 typedoc (as doc generator), jest (as testing tools).`,
     yargs => {
       return yargs
-        .option("to-dir", { alias: "P", desc: "Instead of create in current folder, use this.", type: "string" })
-        .option("space-replace", { desc: "this replacement will replace spaces", default: "-" })
-        .option("current", { alias: "C", desc: "Create application to current folder", type: "string" })
-        .positional("app-name", { desc: "Application name, can be capital, and space name", type: "string" });
+        .option("to-dir", {
+          alias: "P",
+          desc: "Instead of create in current folder, use this.",
+          type: "string"
+        })
+        .option("space-replace", {
+          desc: "this replacement will replace spaces",
+          default: "-"
+        })
+        .option("current", {
+          alias: "C",
+          desc: "Create application to current folder",
+          type: "string"
+        })
+        .positional("app-name", {
+          desc: "Application name, can be capital, and space name",
+          type: "string"
+        });
     }
   )
   .epilogue(`Copyright 2018 by ${app.developer} (${app.repo_url})`).argv;
@@ -46,8 +60,7 @@ const filepath = argv.current ? rootpath : path.join(rootpath, filename);
 
 (async () => {
   const response = await prompts(
-    [
-      {
+    [{
         type: "text",
         name: "name",
         message: "Application name",
@@ -79,7 +92,7 @@ const filepath = argv.current ? rootpath : path.join(rootpath, filename);
       {
         type: "text",
         name: "author_name",
-        message: "Author name"
+        message: "Author firstname"
       },
       {
         type: "text",
@@ -107,8 +120,7 @@ const filepath = argv.current ? rootpath : path.join(rootpath, filename);
         active: "yes",
         inactive: "no"
       }
-    ],
-    {
+    ], {
       onCancel: () => {
         console.log("You cancel prompt commands");
 
