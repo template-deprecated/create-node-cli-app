@@ -58,4 +58,4 @@ You will have only 3 command possible with `yarn` or `npm`
 
 1. **start**: which run `node index.js`
 2. **build**: which build execuable file in bin folder (separate by os).
-3. **deploy**: which basically call `npm publish`
+3. **deploy**: which basically call `npm run publish`, you cannot use `yarn`
