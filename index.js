@@ -9,11 +9,13 @@ const Mustache = require("mustache");
 const Listr = require("listr");
 const prompts = require("prompts");
 
+const pjson = require("./package.json");
+
 const app = {
-  name: "create-node-cli-app",
-  version: "1.1.0",
-  repo_url: "https://github.com/Template-generator/create-node-cli-app",
-  developer: "Kamontat Chantrachirathumrong <kamontat_c@hotmail.com>",
+  name: pjson.name,
+  version: pjson.version,
+  repo_url: pjson.repository,
+  developer: pjson.author,
   when: +new Date()
 };
 
