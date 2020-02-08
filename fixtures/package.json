@@ -29,7 +29,7 @@
     "@types/mustache": "0.8.32",
     "@types/node": "10.12.10",
     "@types/prompts": "1.1.1",
-    "@types/yargs": "12.0.1",
+    "@types/yargs": "12.0.16",
     "babel-jest": "23.6.0",
     "jest": "23.6.0",
     "jest-extended": "0.11.0",
